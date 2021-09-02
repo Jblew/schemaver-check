@@ -9,7 +9,8 @@ type SchemaVerCompatibilityArgs struct {
 }
 
 type SchemaVerCompatibilityResult struct {
-	IsValid bool
+	IsValid  bool
+	ErrorMsg string
 }
 
 func CheckSchemaVerCompatibility(args SchemaVerCompatibilityArgs) (SchemaVerCompatibilityResult, error) {
