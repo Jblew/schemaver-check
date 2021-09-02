@@ -6,7 +6,7 @@ func TestValidData(t *testing.T) {
 	result, err := ValidateAgainstSpecificDefinition(ValidationParams{
 		SchemaPath:     "mock/schema.json",
 		DataPath:       "mock/data_valid.json",
-		DefinitionName: "#/definitions/ChartSpec",
+		DefinitionName: "ChartSpec",
 	})
 
 	if err != nil {
@@ -22,7 +22,7 @@ func TestInvalidData(t *testing.T) {
 	result, err := ValidateAgainstSpecificDefinition(ValidationParams{
 		SchemaPath:     "mock/schema.json",
 		DataPath:       "mock/data_invalid.json",
-		DefinitionName: "#/definitions/ChartSpec",
+		DefinitionName: "ChartSpec",
 	})
 
 	if err != nil {
@@ -38,7 +38,7 @@ func TestWrongDefinition(t *testing.T) {
 	result, err := ValidateAgainstSpecificDefinition(ValidationParams{
 		SchemaPath:     "mock/schema.json",
 		DataPath:       "mock/data_valid.json",
-		DefinitionName: "#/definitions/CompanyStructureSpec",
+		DefinitionName: "CompanyStructureSpec",
 	})
 
 	if err != nil {
@@ -54,7 +54,7 @@ func TestMissingFile(t *testing.T) {
 	_, err := ValidateAgainstSpecificDefinition(ValidationParams{
 		SchemaPath:     "mock/no_such_file.json",
 		DataPath:       "mock/data_valid.json",
-		DefinitionName: "#/definitions/ChartSpec",
+		DefinitionName: "ChartSpec",
 	})
 
 	if err == nil {

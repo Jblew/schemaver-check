@@ -36,8 +36,9 @@ func ValidateAgainstSpecificDefinition(params ValidationParams) (ValidationResul
 	if err != nil {
 		return ValidationResult{IsOk: false}, fmt.Errorf("Cannot unmarhall schema: %+v", err)
 	}
+
 	// insert $ref to specify the root type
-	schemaMap["$ref"] = params.DefinitionName
+	schemaMap["$ref"] = fmt.Sprintf("#/definitions/%s", params.DefinitionName)
 
 	schemaLoader := gojsonschema.NewGoLoader(schemaMap)
 	documentLoader := gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", dataPathAbs))
