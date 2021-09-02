@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"path/filepath"
 
 	"github.com/xeipuuv/gojsonschema"
@@ -21,28 +23,25 @@ type ValidationResult struct {
 func ValidateAgainstSpecificDefinition(params ValidationParams) (ValidationResult, error) {
 	schemaPathAbs, err := filepath.Abs(params.SchemaPath)
 	if err != nil {
-		return ValidationResult{IsOk: false}, err
+		return ValidationResult{IsOk: false}, fmt.Errorf("Cannot obtain absolute schema path: %+v", err)
 	}
 	dataPathAbs, err := filepath.Abs(params.DataPath)
 	if err != nil {
-		return ValidationResult{IsOk: false}, err
+		return ValidationResult{IsOk: false}, fmt.Errorf("Cannot obtain absolute data path: %+v", err)
 	}
 
-	schemaLoader := gojsonschema.NewSchemaLoader()
-	err = schemaLoader.AddSchemas(
-		gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", schemaPathAbs)),
-	)
+	schemaBytes, _ := ioutil.ReadFile(schemaPathAbs)
+	schemaMap := make(map[string]interface{})
+	json.Unmarshal(schemaBytes, &schemaMap)
 	if err != nil {
-		return ValidationResult{IsOk: false}, err
+		return ValidationResult{IsOk: false}, fmt.Errorf("Cannot unmarhall schema: %+v", err)
 	}
+	// insert $ref to specify the root type
+	schemaMap["$ref"] = params.DefinitionName
 
-	schema, err := schemaLoader.Compile(gojsonschema.NewStringLoader(fmt.Sprintf(`{ "$ref": "#/definitions/%s" }`, params.DefinitionName)))
-	if err != nil {
-		return ValidationResult{IsOk: false}, err
-	}
-
+	schemaLoader := gojsonschema.NewGoLoader(schemaMap)
 	documentLoader := gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", dataPathAbs))
-	result, err := schema.Validate(documentLoader)
+	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
 		return ValidationResult{IsOk: false}, err
 	}
@@ -50,6 +49,5 @@ func ValidateAgainstSpecificDefinition(params ValidationParams) (ValidationResul
 	errors := result.Errors()
 	error := fmt.Errorf("Found errors in data: %+v", errors)
 
-	// guide: https://github.com/xeipuuv/gojsonschema
 	return ValidationResult{IsOk: isOk, Error: error}, nil
 }
