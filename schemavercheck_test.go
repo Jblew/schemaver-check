@@ -13,14 +13,14 @@ import (
 func TestCheckSchemaVerCompatibilityCallsHTTPEndpoint(t *testing.T) {
 	noCalls := 0
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "{\"ok\":true}")
 		w.WriteHeader(200)
+		fmt.Fprintln(w, "{\"ok\":true}")
 		noCalls++
 	}))
 	defer ts.Close()
 
 	_, err := CheckSchemaVerCompatibility(SchemaVerCompatibilityArgs{
-		EndpointURLFormat: ts.URL,
+		EndpointURLFormat: fmt.Sprintf("%s#%%s", ts.URL),
 		SchemaPath:        "mock/schema.json",
 		DefinitionName:    "ChartSpec",
 	})
@@ -41,13 +41,13 @@ func TestCheckSchemaVerCompatibilityPostsSchema(t *testing.T) {
 		bodyBytes, _ := ioutil.ReadAll(r.Body)
 		bodyStr = string(bodyBytes)
 		methodStr = r.Method
-		fmt.Fprintln(w, "{\"ok\":true}")
 		w.WriteHeader(200)
+		fmt.Fprintln(w, "{\"ok\":true}")
 	}))
 	defer ts.Close()
 
 	_, err := CheckSchemaVerCompatibility(SchemaVerCompatibilityArgs{
-		EndpointURLFormat: ts.URL,
+		EndpointURLFormat: fmt.Sprintf("%s#%%s", ts.URL),
 		SchemaPath:        "mock/schema.json",
 		DefinitionName:    "ChartSpec",
 	})
@@ -76,7 +76,7 @@ func TestCheckSchemaVerCompatibilityReturnsValidOn200(t *testing.T) {
 	defer ts.Close()
 
 	res, err := CheckSchemaVerCompatibility(SchemaVerCompatibilityArgs{
-		EndpointURLFormat: ts.URL,
+		EndpointURLFormat: fmt.Sprintf("%s#%%s", ts.URL),
 		SchemaPath:        "mock/schema.json",
 		DefinitionName:    "ChartSpec",
 	})
@@ -95,7 +95,7 @@ func TestCheckSchemaVerCompatibilityReturnsInvalidOn409(t *testing.T) {
 	defer ts.Close()
 
 	res, err := CheckSchemaVerCompatibility(SchemaVerCompatibilityArgs{
-		EndpointURLFormat: ts.URL,
+		EndpointURLFormat: fmt.Sprintf("%s#%%s", ts.URL),
 		SchemaPath:        "mock/schema.json",
 		DefinitionName:    "ChartSpec",
 	})
@@ -109,7 +109,7 @@ func TestCheckSchemaVerCompatibilityReturnsInvalidOn409(t *testing.T) {
 	}
 
 	if res.ErrorMsg != "Incompatible JSON Schema" {
-		t.Errorf("CheckSchemaVerCompatibility does not return error message")
+		t.Errorf("CheckSchemaVerCompatibility does not return valid error message (returned='%s')", res.ErrorMsg)
 	}
 }
 
@@ -118,7 +118,7 @@ func TestCheckSchemaVerCompatibilityReturnsErrorOn400(t *testing.T) {
 	defer ts.Close()
 
 	res, err := CheckSchemaVerCompatibility(SchemaVerCompatibilityArgs{
-		EndpointURLFormat: ts.URL,
+		EndpointURLFormat: fmt.Sprintf("%s#%%s", ts.URL),
 		SchemaPath:        "mock/schema.json",
 		DefinitionName:    "ChartSpec",
 	})
@@ -142,8 +142,8 @@ func TestCheckSchemaVerCompatibilityReturnsErrorOn400(t *testing.T) {
 
 func makeHttpEndpointWithResponse(statusCode int, response string) *httptest.Server {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, response)
 		w.WriteHeader(statusCode)
+		fmt.Fprintln(w, response)
 	}))
 	return ts
 }
