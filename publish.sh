@@ -4,7 +4,7 @@ cd "${DIR}"
 set -e
 
 BASE_TAG="jedrzejlewandowski/jsonschema-compatibility-checker"
-VERSION="1.0.0"
+VERSION="1.0.1"
 
 git tag "v${VERSION}"
 git push origin "v${VERSION}"
