@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -61,6 +62,7 @@ func makePostRequest(url string, requestBody []byte) (int, compatibilityEndpoint
 	if err != nil {
 		return status, compatibilityEndpointResponse{}, err
 	}
+	log.Printf("Response from compatibility endpoint: %s (code=%d)", string(responseBody), status)
 	var response compatibilityEndpointResponse
 	err = json.Unmarshal(responseBody, &response)
 	if err != nil {
