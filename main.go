@@ -36,11 +36,10 @@ func main() {
 				FnValidator:                         ValidateAgainstSpecificDefinition,
 				FnChecker:                           CheckSchemaVerCompatibility,
 			}
-			success, message, err := runApp(conf)
+			success, err := runApp(conf)
 			if err != nil {
 				return err
 			}
-			log.Println(message)
 			if !success {
 				os.Exit(1)
 			}
