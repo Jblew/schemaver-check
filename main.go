@@ -28,7 +28,7 @@ func main() {
 			conf := AppConfig{
 				SkipSchemaCompatibilityCheck:        os.Getenv("SCHEMAVERCHECK_SKIP_REMOTE_CHECK") == "1",
 				DefinitionName:                      c.String("definition-name"),
-				SchemaFilePath:                      os.Getenv("SCHEMAVERCHECK_SCHEMA_PATH"),
+				SchemaFilePath:                      os.Getenv("SCHEMAVERCHECK_SCHEMA_FILE"),
 				DataFilePath:                        c.String("data-file"),
 				CompatibilityCheckEndpointURLFormat: os.Getenv("SCHEMAVERCHECK_ENDPOINT_URL_FORMAT"),
 				CompatibilityCheckRetryCount:        10,
