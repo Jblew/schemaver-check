@@ -8,9 +8,8 @@ import (
 
 func retry(attempts int, sleep time.Duration, f func() error) (err error) {
 	for i := 0; i < attempts; i++ {
-		log.Println("This is attempt number", i)
 		if i > 0 {
-			log.Println("retrying after error:", err)
+			log.Printf("Retrying (%d time) after error: %+v", i+1, err)
 			time.Sleep(sleep)
 			sleep *= 2
 		}

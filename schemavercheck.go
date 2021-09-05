@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type SchemaVerCompatibilityArgs struct {
@@ -62,7 +63,8 @@ func makePostRequest(url string, requestBody []byte) (int, compatibilityEndpoint
 	if err != nil {
 		return status, compatibilityEndpointResponse{}, err
 	}
-	log.Printf("Response from compatibility endpoint: %s (code=%d)", string(responseBody), status)
+	responseBodyTrimmed := strings.Trim(string(responseBody), " \n\t")
+	log.Printf("Response from compatibility endpoint: %s (code=%d)", responseBodyTrimmed, status)
 	var response compatibilityEndpointResponse
 	err = json.Unmarshal(responseBody, &response)
 	if err != nil {

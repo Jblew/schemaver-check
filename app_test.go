@@ -197,7 +197,13 @@ func TestRetriesCheckAndReturnsSuccessOnCorrectAttempt(t *testing.T) {
 	}
 	conf.FnChecker = func(SchemaVerCompatibilityArgs) (SchemaVerCompatibilityResult, error) {
 		checkerCount++
-		return SchemaVerCompatibilityResult{IsValid: checkerCount > 3}, nil
+		var err error
+		if checkerCount < 3 {
+			err = fmt.Errorf("Cannot connect yet")
+		} else {
+			err = nil
+		}
+		return SchemaVerCompatibilityResult{IsValid: true}, err
 	}
 	success, err := runApp(conf)
 
@@ -205,8 +211,8 @@ func TestRetriesCheckAndReturnsSuccessOnCorrectAttempt(t *testing.T) {
 		t.Errorf("%+v", err)
 	}
 
-	if checkerCount != 4 {
-		t.Errorf("Should run FnChecker 3 times")
+	if checkerCount != 3 {
+		t.Errorf("Should run FnChecker 3 times (%d instead)", checkerCount)
 	}
 
 	if !success {
@@ -223,12 +229,18 @@ func TestRetriesCheckAndFailsAfterMaxAttempts(t *testing.T) {
 	}
 	conf.FnChecker = func(SchemaVerCompatibilityArgs) (SchemaVerCompatibilityResult, error) {
 		checkerCount++
-		return SchemaVerCompatibilityResult{IsValid: checkerCount > 6}, nil
+		var err error
+		if checkerCount < 6 {
+			err = fmt.Errorf("Cannot connect yet")
+		} else {
+			err = nil
+		}
+		return SchemaVerCompatibilityResult{IsValid: false}, err
 	}
 	success, err := runApp(conf)
 
-	if err != nil {
-		t.Errorf("%+v", err)
+	if err == nil {
+		t.Errorf("Should return error")
 	}
 
 	if checkerCount != 5 {
