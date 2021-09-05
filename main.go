@@ -10,8 +10,8 @@ import (
 
 func main() {
 	app := &cli.App{
-		Name:  "jsonschema-compatibility-checker",
-		Usage: "jsonschema-compatibility-checker --data-file [path] --definition-name [path]",
+		Name:  "schemaver-check",
+		Usage: "schemaver-check --data-file [path] --definition-name [path]",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "data-file",

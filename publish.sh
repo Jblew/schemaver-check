@@ -3,8 +3,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "${DIR}"
 set -e
 
-BASE_TAG="jedrzejlewandowski/jsonschema-compatibility-checker"
-VERSION="1.0.1"
+BASE_TAG="jedrzejlewandowski/schemaver-check"
+VERSION="1.1.0"
 
 git tag "v${VERSION}"
 git push origin "v${VERSION}"

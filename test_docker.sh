@@ -1,3 +1,3 @@
-ARTIFACT="jsonschema-compatibility-checker"
+ARTIFACT="schemaver-check"
 docker build --progress=plain -t ${ARTIFACT} .
 docker run -it ${ARTIFACT}

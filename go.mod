@@ -1,4 +1,4 @@
-module github.com/Jblew/jsonschema-compatibility-checker
+module github.com/Jblew/schemaver-check
 
 go 1.13
 

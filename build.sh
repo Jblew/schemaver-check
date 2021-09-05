@@ -3,5 +3,5 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "${DIR}"
 set -e
 
-go build -o jsonschema-compatibility-checker
+go build -o schemaver-check
 echo "Done"
