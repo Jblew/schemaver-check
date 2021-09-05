@@ -32,7 +32,9 @@ func main() {
 				DataFilePath:                        c.String("data-file"),
 				CompatibilityCheckEndpointURLFormat: os.Getenv("JSCC_COMPATIBILITY_CHECK_ENDPOINT_URL_FORMAT"),
 				CompatibilityCheckRetryCount:        10,
-				CompatibilityCheckRetryInterval:     1 * time.Second,
+				CompatibilityCheckRetryInterval:     500 * time.Millisecond,
+				FnValidator:                         ValidateAgainstSpecificDefinition,
+				FnChecker:                           CheckSchemaVerCompatibility,
 			}
 			success, message, err := runApp(conf)
 			if err != nil {
@@ -49,5 +51,6 @@ func main() {
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
+		os.Exit(1)
 	}
 }

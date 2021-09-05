@@ -13,11 +13,13 @@ type AppConfig struct {
 	CompatibilityCheckEndpointURLFormat string
 	CompatibilityCheckRetryCount        int
 	CompatibilityCheckRetryInterval     time.Duration
+	FnValidator                         func(ValidationParams) (ValidationResult, error)
+	FnChecker                           func(SchemaVerCompatibilityArgs) (SchemaVerCompatibilityResult, error)
 }
 
 func runApp(config AppConfig) (bool, string, error) {
 	out := "\n"
-	validationResult, err := ValidateAgainstSpecificDefinition(ValidationParams{
+	validationResult, err := config.FnValidator(ValidationParams{
 		SchemaPath:     config.SchemaFilePath,
 		DataPath:       config.DataFilePath,
 		DefinitionName: config.DefinitionName,
@@ -37,7 +39,7 @@ func runApp(config AppConfig) (bool, string, error) {
 	}
 	checkResult := SchemaVerCompatibilityResult{}
 	err = retry(config.CompatibilityCheckRetryCount, config.CompatibilityCheckRetryInterval, func() error {
-		checkResultAtAttempt, err := CheckSchemaVerCompatibility(SchemaVerCompatibilityArgs{
+		checkResultAtAttempt, err := config.FnChecker(SchemaVerCompatibilityArgs{
 			EndpointURLFormat: config.CompatibilityCheckEndpointURLFormat,
 			SchemaPath:        config.SchemaFilePath,
 			DefinitionName:    config.DefinitionName,
