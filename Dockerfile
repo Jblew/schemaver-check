@@ -1,6 +1,7 @@
 FROM golang:1.17-alpine
 WORKDIR /src
 ADD . /src
+RUN ./build.sh && ./test.sh && ./test_cli.sh
 RUN GOBIN=/bin/ CGO_ENABLED=0 go install
 
 CMD ["/bin/sh", "-c", "\
