@@ -26,11 +26,11 @@ func main() {
 		},
 		Action: func(c *cli.Context) error {
 			conf := AppConfig{
-				SkipSchemaCompatibilityCheck:        os.Getenv("JSCC_SKIP_SCHEMAVER_COMPATIBILITY_CHECK") == "1",
+				SkipSchemaCompatibilityCheck:        os.Getenv("SCHEMAVERCHECK_SKIP_REMOTE_CHECK") == "1",
 				DefinitionName:                      c.String("definition-name"),
-				SchemaFilePath:                      os.Getenv("JSCC_SCHEMA_FILE_PATH"),
+				SchemaFilePath:                      os.Getenv("SCHEMAVERCHECK_SCHEMA_PATH"),
 				DataFilePath:                        c.String("data-file"),
-				CompatibilityCheckEndpointURLFormat: os.Getenv("JSCC_COMPATIBILITY_CHECK_ENDPOINT_URL_FORMAT"),
+				CompatibilityCheckEndpointURLFormat: os.Getenv("SCHEMAVERCHECK_ENDPOINT_URL_FORMAT"),
 				CompatibilityCheckRetryCount:        10,
 				CompatibilityCheckRetryInterval:     500 * time.Millisecond,
 				FnValidator:                         ValidateAgainstSpecificDefinition,
